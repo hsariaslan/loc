@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom/client';
 import ReduxExample from './components/ReduxExample';
 import Home from './pages/Home';
 import GenerateFixtures from './pages/GenerateFixtures';
+import Simulation from './pages/Simulation';
 import {Provider} from "react-redux";
 import store from "./store";
 import React from "react";
@@ -22,6 +23,7 @@ ReactDOM.createRoot(document.getElementById('app')).render(
             <Routes>
                 <Route path="/" element={<Home />}/>
                 <Route path="/generate-fixtures" element={<GenerateFixtures />}/>
+                <Route path="/simulation" element={<Simulation />}/>
             </Routes>
         </Provider>
     </BrowserRouter>

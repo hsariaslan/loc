@@ -56,7 +56,7 @@ const GenerateFixtures = () => {
                                 {fixturesList}
                             </ul>
                             <Link to="/" className="btn btn-danger mt-3">Back</Link>
-                            <Link to="/" className="btn btn-primary mt-3 mx-3">Start Simulation</Link>
+                            <Link to="/simulation" className="btn btn-primary mt-3 mx-3">Start Simulation</Link>
                         </div>
                     </div>
                 </div>
