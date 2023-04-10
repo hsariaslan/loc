@@ -14,12 +14,16 @@ return new class extends Migration
         Schema::create('fixtures', function (Blueprint $table) {
             $table->id();
             $table->foreignId('league_id')->constrained();
-            $table->tinyInteger('week');
+            $table->unsignedTinyInteger('week');
             $table->unsignedBigInteger('home_team_id');
             $table->unsignedBigInteger('away_team_id');
-            $table->tinyInteger('home_team_score')->nullable();
-            $table->tinyInteger('away_team_score')->nullable();
+            $table->boolean('is_played')->default(false);
+            $table->unsignedTinyInteger('home_team_score')->nullable();
+            $table->unsignedTinyInteger('away_team_score')->nullable();
             $table->timestamps();
+
+            $table->foreign('home_team_id')->on('teams')->references('id');
+            $table->foreign('away_team_id')->on('teams')->references('id');
         });
     }
 
