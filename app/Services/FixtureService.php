@@ -13,6 +13,8 @@
 
 namespace App\Services;
 
+use Illuminate\Database\Eloquent\Collection;
+
 class FixtureService
 {
     /**
@@ -48,12 +50,12 @@ class FixtureService
     /**
      * Construct
      *
-     * @param array $teams Array with the teams names
+     * @param Collection $teams Array with the teams names
      * @return void
      */
-    public function __construct(array $teams)
+    public function __construct(Collection $teams)
     {
-        shuffle($teams);
+        $teams = $teams->shuffle();
         $this->countTeams = count($teams);
 
         if ($this->countTeams % 2 == 1) {

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\Fixture;
 use App\Models\League;
 use App\Models\Team;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Services\FixtureService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -16,24 +16,44 @@ class FixtureSeeder extends Seeder
      */
     public function run(): void
     {
-        $leagueSlug = Str::slug("Insider Champions League");
-        $leagueId = League::select('id')->bySlug($leagueSlug)->first()->id;
-        $teams = Team::select('id')->byLeagueId($leagueId)->inRandomOrder()->get();
-        $teamsCount = $teams->count();
-        $weeksCount = ($teamsCount - 1) * 2;
+        if(!Fixture::exists()) {
+            $leagueSlug = Str::slug("Insider Champions League");
+            $leagueId = League::select('id')->bySlug($leagueSlug)->first()->id;
+            $teams = Team::byLeagueId($leagueId)->get();
+            $pairFixture = new FixtureService($teams);
+            $schedule = $pairFixture->getSchedule();
+            $reversedSchedule = [];
 
-        for ($week = 1; $week <= $weeksCount; $week ++) {
-            for ($i = $week + 1; $i <= $teamsCount; $i ++) {
-                foreach ($teams as $team) {
+            for ($j = 0; $j < 2; $j ++) {
+                $i = 0;
+
+                foreach($schedule as $week){
+                    foreach($week as $games){
+                        if ($j == 1) {
+                            $games = array_reverse($games);
+                            $reversedSchedule[$i][] = $games;
+                        }
+                    }
+
+                    $i ++;
                 }
             }
 
-            Fixture::create([
-                'league_id' => $leagueId,
-                'week' => $week,
-                'home_team_id' => $team->id,
-                'away_team_id' => $team->id,
-            ]);
+            $fixtureWeeks = array_merge($schedule, $reversedSchedule);
+            $week = 1;
+
+            foreach ($fixtureWeeks as $games) {
+                foreach ($games as $teams) {
+                    Fixture::create([
+                        "league_id" => $leagueId,
+                        "week" => $week,
+                        "home_team_id" => $teams[0]->id,
+                        "away_team_id" => $teams[1]->id,
+                    ]);
+                }
+
+                $week ++;
+            }
         }
     }
 }

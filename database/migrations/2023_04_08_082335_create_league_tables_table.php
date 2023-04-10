@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('league_tables', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('league_id')->constrained();
+            $table->foreignId('team_id')->constrained();
+            $table->unsignedTinyInteger('games')->default(0);
+            $table->unsignedTinyInteger('point')->default(0);
+            $table->unsignedTinyInteger('wins')->default(0);
+            $table->unsignedTinyInteger('loses')->default(0);
+            $table->unsignedTinyInteger('draws')->default(0);
+            $table->unsignedTinyInteger('goal_difference')->default(0);
             $table->timestamps();
         });
     }
