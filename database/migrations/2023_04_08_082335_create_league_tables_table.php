@@ -15,12 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('league_id')->constrained();
             $table->foreignId('team_id')->constrained();
+            $table->unsignedTinyInteger('championship_prediction')->default(0);
             $table->unsignedTinyInteger('games')->default(0);
             $table->unsignedTinyInteger('point')->default(0);
             $table->unsignedTinyInteger('wins')->default(0);
             $table->unsignedTinyInteger('loses')->default(0);
             $table->unsignedTinyInteger('draws')->default(0);
-            $table->unsignedTinyInteger('goal_difference')->default(0);
+            $table->tinyInteger('goal_difference')->default(0);
             $table->timestamps();
         });
     }

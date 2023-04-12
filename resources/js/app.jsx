@@ -8,7 +8,6 @@ import './bootstrap';
 
 import ReactDOM from 'react-dom/client';
 
-import ReduxExample from './components/ReduxExample';
 import Home from './pages/Home';
 import GenerateFixtures from './pages/GenerateFixtures';
 import Simulation from './pages/Simulation';

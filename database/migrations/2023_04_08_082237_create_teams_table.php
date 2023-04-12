@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('league_id')->constrained();
             $table->string("slug", 100)->unique();
             $table->string("name", 100)->unique();
+            $table->unsignedTinyInteger("strength");
             $table->timestamps();
         });
     }

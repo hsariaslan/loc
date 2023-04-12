@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\FixturesController;
+use App\Http\Controllers\LeagueTableController;
+use App\Http\Controllers\SimulationController;
+use App\Http\Controllers\TeamsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,157 +22,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/get-teams', function () {
-    $teams = [
-        [
-            "id" => 1,
-            "name" => "Arsenal",
-            "strength" => 90,
-            "point" => 0,
-            "wins" => 0,
-            "loses" => 0,
-            "draws" => 0,
-            "goal_difference" => 0,
-        ],
-        [
-            "id" => 2,
-            "name" => "Chelsea",
-            "strength" => 80,
-            "point" => 0,
-            "wins" => 0,
-            "loses" => 0,
-            "draws" => 0,
-            "goal_difference" => 0,
-        ],
-        [
-            "id" => 3,
-            "name" => "Manchester City",
-            "strength" => 95,
-            "point" => 0,
-            "wins" => 0,
-            "loses" => 0,
-            "draws" => 0,
-            "goal_difference" => 0,
-        ],
-        [
-            "id" => 4,
-            "name" => "Liverpool",
-            "strength" => 85,
-            "point" => 0,
-            "wins" => 0,
-            "loses" => 0,
-            "draws" => 0,
-            "goal_difference" => 0,
-        ],
-        [
-            "id" => 5,
-            "name" => "Tottenham Hotspur",
-            "strength" => 75,
-            "point" => 0,
-            "wins" => 0,
-            "loses" => 0,
-            "draws" => 0,
-            "goal_difference" => 0,
-        ],
-    ];
+Route::get('get-teams', [TeamsController::class, 'getTeams']);
 
-    return response()->json($teams);
-});
+Route::get('get-fixtures', [FixturesController::class, 'getFixtures']);
+Route::get('generate-fixtures', [FixturesController::class, 'generateFixtures']);
+Route::get('regenerate-fixtures', [FixturesController::class, 'regenerateFixtures']);
+Route::get('get-matches-of-week/{week?}', [FixturesController::class, 'getMatchesOfWeek']);
 
-Route::get('/generate-fixtures', function () {
-    $teams = [
-        [
-            "id" => 1,
-            "name" => "Arsenal",
-            "strength" => 90,
-            "point" => 0,
-            "wins" => 0,
-            "loses" => 0,
-            "draws" => 0,
-            "goal_difference" => 0,
-        ],
-        [
-            "id" => 2,
-            "name" => "Chelsea",
-            "strength" => 80,
-            "point" => 0,
-            "wins" => 0,
-            "loses" => 0,
-            "draws" => 0,
-            "goal_difference" => 0,
-        ],
-        [
-            "id" => 3,
-            "name" => "Manchester City",
-            "strength" => 95,
-            "point" => 0,
-            "wins" => 0,
-            "loses" => 0,
-            "draws" => 0,
-            "goal_difference" => 0,
-        ],
-        [
-            "id" => 4,
-            "name" => "Liverpool",
-            "strength" => 85,
-            "point" => 0,
-            "wins" => 0,
-            "loses" => 0,
-            "draws" => 0,
-            "goal_difference" => 0,
-        ],
-//        [
-//            "id" => 5,
-//            "name" => "Tottenham Hotspur",
-//            "strength" => 75,
-//            "point" => 0,
-//            "wins" => 0,
-//            "loses" => 0,
-//            "draws" => 0,
-//            "goal_difference" => 0,
-//        ],
-//        [
-//            "id" => 6,
-//            "name" => "Manchester United",
-//            "strength" => 94,
-//            "point" => 0,
-//            "wins" => 0,
-//            "loses" => 0,
-//            "draws" => 0,
-//            "goal_difference" => 0,
-//        ],
-//        [
-//            "id" => 7,
-//            "name" => "Newcastle United",
-//            "strength" => 74,
-//            "point" => 0,
-//            "wins" => 0,
-//            "loses" => 0,
-//            "draws" => 0,
-//            "goal_difference" => 0,
-//        ],
-    ];
+Route::get('get-league-table', [LeagueTableController::class, 'getLeagueTable']);
+Route::get('calculate-championship-predictions', [LeagueTableController::class, 'calculateChampionshipPredictions']);
 
-    $pairFixture = new \App\Services\FixtureService(collect($teams)->pluck("name")->toArray());
-    $schedule = $pairFixture->getSchedule();
-    $reversedSchedule = [];
-
-    for ($j = 0; $j < 2; $j ++) {
-        $i = 0;
-
-        foreach($schedule as $week){
-            foreach($week as $games){
-                if ($j == 1) {
-                    $games = array_reverse($games);
-                    $reversedSchedule[$i][] = $games;
-                }
-            }
-
-            $i ++;
-        }
-    }
-
-    $schedule = array_merge($schedule, $reversedSchedule);
-
-    return response()->json($schedule);
-});
+Route::get('reset-data', [SimulationController::class, 'resetData']);
+Route::get('play-matches-of-week/{week}', [SimulationController::class, 'playMatchesOfAWeek']);
+Route::get('play-all-weeks', [SimulationController::class, 'playAllWeeks']);

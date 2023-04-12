@@ -33,6 +33,7 @@ class TeamSeeder extends Seeder
                 'league_id' => $leagueId,
                 'slug' => $teamSlug,
                 'name' => $teamName,
+                'strength' => rand(70, 100),
             ]);
         }
     }
