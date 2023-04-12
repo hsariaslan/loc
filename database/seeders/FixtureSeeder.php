@@ -21,34 +21,16 @@ class FixtureSeeder extends Seeder
             $leagueId = League::select('id')->bySlug($leagueSlug)->first()->id;
             $teams = Team::byLeagueId($leagueId)->get();
             $pairFixture = new FixtureService($teams);
-            $schedule = $pairFixture->getSchedule();
-            $reversedSchedule = [];
-
-            for ($j = 0; $j < 2; $j ++) {
-                $i = 0;
-
-                foreach($schedule as $week){
-                    foreach($week as $games){
-                        if ($j == 1) {
-                            $games = array_reverse($games);
-                            $reversedSchedule[$i][] = $games;
-                        }
-                    }
-
-                    $i ++;
-                }
-            }
-
-            $fixtureWeeks = array_merge($schedule, $reversedSchedule);
+            $fixtures = $pairFixture->getFixtures();
             $week = 1;
 
-            foreach ($fixtureWeeks as $games) {
+            foreach ($fixtures as $games) {
                 foreach ($games as $teams) {
                     Fixture::create([
                         "league_id" => $leagueId,
                         "week" => $week,
-                        "home_team_id" => $teams[0]->id,
-                        "away_team_id" => $teams[1]->id,
+                        "home_team_id" => $teams[0]->id ?? null,
+                        "away_team_id" => $teams[1]->id ?? null,
                     ]);
                 }
 

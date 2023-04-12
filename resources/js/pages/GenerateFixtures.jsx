@@ -1,21 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    decrement,
-    increment,
-    incrementByAmount,
     selectFixtures,
-    setFixtures,
-    updateTeams,
-    generateFixtures,
-    // getTeams
-} from "../reducers/exampleReducer";
+    setFixtures, setMatchesOfWeek,
+} from "../reducers/rootReducer";
 import { FixturesService } from "../services";
 import {Link} from "react-router-dom";
 
 const GenerateFixtures = () => {
     const dispatch = useDispatch();
+    // const teams = useSelector(selectTeams);
     const fixtures = useSelector(selectFixtures);
+
+    const regenerateFixtures = () => {
+        FixturesService.regenerateFixtures().then(data => {
+            dispatch(setFixtures(data));
+        });
+    }
 
     useEffect(() => {
         FixturesService.generateFixtures().then(data => {
@@ -23,23 +24,21 @@ const GenerateFixtures = () => {
         });
     }, [fixtures.whenToUpdateProp]);
 
-    console.log(fixtures);
-    let weekCount = -1;
-    let i = -1;
+    let i = 0;
 
-    const fixturesList = fixtures.map((week) => {
-        weekCount ++;
+    const fixturesList = fixtures.map((weeks) => {
+        i ++;
 
         return (
-            <li key={weekCount} className="list-group-item text-start">
-                <h4>Week {weekCount + 1}</h4>
-                {week.map((teams) => {
-                    i ++;
+            <li key={"week-" + i} className="list-group-item text-start">
+                <h4>Week {i}</h4>
+
+                {weeks.map((match) => {
                     return (
-                        <div key={i}>
-                            {teams[0] + " - " + teams[1]}
+                        <div key={"match-" + match.id}>
+                            {match.home_team?.name + " - " + match.away_team?.name}
                         </div>
-                    )
+                    );
                 })}
             </li>
         );
@@ -56,7 +55,8 @@ const GenerateFixtures = () => {
                                 {fixturesList}
                             </ul>
                             <Link to="/" className="btn btn-danger mt-3">Back</Link>
-                            <Link to="/simulation" className="btn btn-primary mt-3 mx-3">Start Simulation</Link>
+                            <button className="btn btn-secondary mt-3 mx-3" onClick={() => regenerateFixtures()}>Regenerate Fixtures</button>
+                            <Link to="/simulation" className="btn btn-primary mt-3">Start Simulation</Link>
                         </div>
                     </div>
                 </div>

@@ -5,10 +5,3 @@
 // // const rootReducer = exampleReducer;
 //
 // export default exampleReducer;
-
-import { combineReducers } from 'redux'
-import userReducer from './userReducer'
-
-export default combineReducers({
-    users: userReducer
-})

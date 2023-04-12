@@ -52,4 +52,9 @@ class Fixture extends Model
     {
         return $query->where("away_team_id", $awayTeamId);
     }
+
+    public function scopeByNotPlayedYet(Builder $query): Builder
+    {
+        return $query->where("is_played", 0);
+    }
 }

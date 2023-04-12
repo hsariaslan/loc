@@ -85,10 +85,39 @@ class FixtureService
     }
 
     /**
+     * Returns the fixtures with generated schedule and merged with its reverse
+     * @return array Array with the full matches created and reversed
+     */
+    public function getFixtures(): array
+    {
+        $schedule = $this->getSchedule();
+        $reversedSchedule = [];
+
+        for ($j = 0; $j < 2; $j ++) {
+            $i = 0;
+
+            foreach($schedule as $week){
+                foreach($week as $games){
+                    if ($j == 1) {
+                        $games = array_reverse($games);
+                        $reversedSchedule[$i][] = $games;
+                    }
+                }
+
+                $i ++;
+            }
+        }
+
+        $fixtures = array_merge($schedule, $reversedSchedule);
+
+        return $fixtures;
+    }
+
+    /**
      * Returns the schedule generated
      * @return array Array with the full matches created
      */
-    public function getSchedule(): array
+    private function getSchedule(): array
     {
         $rol = array();
         $rol[] = $this->init();

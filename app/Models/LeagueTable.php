@@ -11,6 +11,7 @@ class LeagueTable extends Model
     protected $fillable = [
         "league_id",
         "team_id",
+        "championship_prediction",
         "games",
         "point",
         "wins",
